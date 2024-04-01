@@ -1,0 +1,46 @@
+#include <iostream>
+#include <random>
+#include <ios>
+#include <iomanip>
+using namespace std;
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false); // deactivate synchronization
+    int n;
+    int k;
+    cin >> n;
+    cin >> k;
+    double* arr = new double[n];
+    for (int i = 0; i< n; i++){
+        cin >> arr[i];
+    }
+    //create a random_device object, which is used to generate random numbers.
+    //it provides the source of random numbers.
+    random_device rd;
+    //create a random number generator of type mt19937.
+    //it uses random_device as a source of random numbers.
+    mt19937 gen(rd());
+    //create a uniform distribution of integers in the range from 0 to n - 1.
+    //this will be used to generate a random array index.
+    uniform_int_distribution<> dis(0, n - 1);
+    //Neymaer's algorithm
+    double compensation = 0.0;
+    double sum = 0.0;
+    for (int i = 0; i< k;i++){
+        int randomIndex = dis(gen);
+        double t = sum + arr[randomIndex];
+        if (abs(sum) >= abs(arr[randomIndex])) {
+            compensation += (sum - t) + arr[randomIndex];
+        } else {
+            compensation += (arr[randomIndex] - t) + sum;
+        }
+        sum = t;
+    }
+    sum += compensation;
+
+    cout << fixed << setprecision(10) << sum << endl; //it is possible to select a precision suitable for certain input values
+}
+
+
